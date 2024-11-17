@@ -63,7 +63,7 @@ public class RemappingManager {
         final PreparedData preparedData = this.plugin.getDataManager().fetchData();
 
         try {
-            this.classRepo = new JarRepo(Jar.init(preparedData.versionJarPath().toFile()));
+            this.classRepo = new JarRepo(Jar.init(preparedData.remappedJarPath().toFile()));
         } catch (final IOException e) {
             throw new UncheckedIOException("Failed to load version jar", e);
         }
