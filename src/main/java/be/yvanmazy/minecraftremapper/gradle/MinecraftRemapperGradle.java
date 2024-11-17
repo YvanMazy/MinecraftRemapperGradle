@@ -63,10 +63,18 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
             if (Files.notExists(jarPath)) {
                 throw new IllegalStateException("The remapped jar is not found at '" + jarPath + "'");
             }
-            project.getDependencies().add("compileOnly", project.files(jarPath.toFile()));
+            final var jarDependency = project.files(jarPath);
+            this.extension.getDependenciesConfigurations()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .forEach(config -> project.getDependencies().add(config, jarDependency));
         }
         if (this.extension.isIncludeLibrariesDependency()) {
-            project.getDependencies().add("compileOnly", project.files(this.dataManager.fetchLibraries()));
+            final var libraryDependency = project.files(this.dataManager.fetchLibraries());
+            this.extension.getDependenciesConfigurations()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .forEach(config -> project.getDependencies().add(config, libraryDependency));
         }
 
         if (this.extension.isRemapOnCompile()) {

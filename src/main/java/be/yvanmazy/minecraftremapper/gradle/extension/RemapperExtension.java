@@ -28,6 +28,7 @@ import be.yvanmazy.minecraftremapper.DirectionType;
 import org.gradle.api.InvalidUserDataException;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public class RemapperExtension {
 
@@ -40,6 +41,8 @@ public class RemapperExtension {
     private boolean cancelCompileCache = true;
     private boolean includeDependency = true;
     private boolean includeLibrariesDependency;
+
+    private List<String> dependenciesConfigurations = List.of("compileOnly");
 
     public void validate() {
         if (this.version == null) {
@@ -104,6 +107,14 @@ public class RemapperExtension {
 
     public void setIncludeLibrariesDependency(final boolean includeLibrariesDependency) {
         this.includeLibrariesDependency = includeLibrariesDependency;
+    }
+
+    public List<String> getDependenciesConfigurations() {
+        return this.dependenciesConfigurations;
+    }
+
+    public void setDependenciesConfigurations(final List<String> dependenciesConfigurations) {
+        this.dependenciesConfigurations = dependenciesConfigurations;
     }
 
 }
