@@ -17,6 +17,15 @@ dependencies {
     implementation 'com.github.YvanMazy:MinecraftRemapper:dc0de8165a'
 }
 
+gradlePlugin {
+    plugins {
+        minecraftRemapperGradle {
+            id = 'be.yvanmazy.minecraftremapper.gradle'
+            implementationClass = 'be.yvanmazy.minecraftremapper.gradle.MinecraftRemapperGradle'
+        }
+    }
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
