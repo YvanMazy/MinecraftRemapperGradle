@@ -29,6 +29,7 @@ import be.yvanmazy.minecraftremapper.gradle.data.PreparedData;
 import net.md_5.specialsource.Jar;
 import net.md_5.specialsource.JarMapping;
 import net.md_5.specialsource.JarRemapper;
+import net.md_5.specialsource.provider.JarProvider;
 import net.md_5.specialsource.repo.ClassRepo;
 import net.md_5.specialsource.repo.JarRepo;
 import org.jetbrains.annotations.NotNull;
@@ -63,13 +64,14 @@ public class RemappingManager {
         final PreparedData preparedData = this.plugin.getDataManager().fetchData();
 
         try {
-            this.classRepo = new JarRepo(Jar.init(preparedData.remappedJarPath().toFile()));
+            this.classRepo = new JarRepo(Jar.init(preparedData.versionJarPath().toFile()));
         } catch (final IOException e) {
             throw new UncheckedIOException("Failed to load version jar", e);
         }
 
         final JarMapping mapping = new JarMapping();
         try {
+            mapping.setFallbackInheritanceProvider(new JarProvider(Jar.init(preparedData.remappedJarPath().toFile())));
             try (final BufferedReader reader = Files.newBufferedReader(preparedData.mappingPath())) {
                 mapping.loadMappings(reader, null, null, true);
             }
