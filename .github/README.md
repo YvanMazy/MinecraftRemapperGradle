@@ -25,7 +25,7 @@ buildscript() {
         }
     }
     dependencies {
-        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:<REPLACE BY VERSION>'
+        classpath 'com.github.YvanMazy.MinecraftRemapperGradle:MinecraftRemapperGradle:<PLUGIN VERSION>'
     }
 }
 
