@@ -104,7 +104,12 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
     }
 
     private @NotNull Path prepareHomePath(final @NotNull Project project) {
-        final Path path = Objects.requireNonNullElseGet(this.extension.getHomePath(), () -> getHomePath(project));
+        final Path path;
+        if (this.extension.getHomePath() != null) {
+            path = this.extension.getHomePath().toPath();
+        } else {
+            path = project.getGradle().getGradleUserHomeDir().toPath().resolve("caches").resolve("MinecraftRemapperGradle");
+        }
         if (!Files.isDirectory(path)) {
             try {
                 Files.createDirectories(path);
@@ -113,18 +118,6 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
             }
         }
         return path;
-    }
-
-    private static @NotNull Path getHomePath(final @NotNull Project project) {
-        final Path home = project.getGradle().getGradleUserHomeDir().toPath().resolve("caches").resolve("MinecraftRemapperGradle");
-        if (Files.isDirectory(home)) {
-            try {
-                Files.createDirectories(home);
-            } catch (final IOException e) {
-                throw new UncheckedIOException("Failed to create plugin directory", e);
-            }
-        }
-        return home;
     }
 
 }

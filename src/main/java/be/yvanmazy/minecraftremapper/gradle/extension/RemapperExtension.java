@@ -27,12 +27,12 @@ package be.yvanmazy.minecraftremapper.gradle.extension;
 import be.yvanmazy.minecraftremapper.DirectionType;
 import org.gradle.api.InvalidUserDataException;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.List;
 
 public class RemapperExtension {
 
-    private Path homePath;
+    private File homePath;
 
     private String version;
     private DirectionType directionType;
@@ -53,11 +53,11 @@ public class RemapperExtension {
         }
     }
 
-    public Path getHomePath() {
+    public File getHomePath() {
         return this.homePath;
     }
 
-    public void setHomePath(final Path homePath) {
+    public void setHomePath(final File homePath) {
         this.homePath = homePath;
     }
 
