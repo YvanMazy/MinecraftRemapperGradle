@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Objects;
 
 public class MinecraftRemapperGradle implements Plugin<Project> {
@@ -62,31 +61,39 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
         this.homePath = this.prepareHomePath(project);
 
         final DependencyHandler dependencies = project.getDependencies();
-        final List<String> configurations = this.extension.getDependenciesConfigurations().stream().filter(Objects::nonNull).toList();
 
-        if (this.extension.isIncludeDependency() || this.extension.isIncludeRawDependency()) {
+        if (this.extension.isIncludeRemappedJarDependency() || this.extension.isIncludeRawJarDependency()) {
             final PreparedData preparedData = this.dataManager.fetchData();
-            if (this.extension.isIncludeDependency()) {
+            if (this.extension.isIncludeRemappedJarDependency()) {
                 final Path jarPath = preparedData.remappedJarPath();
                 if (Files.notExists(jarPath)) {
                     throw new IllegalStateException("The remapped jar is not found at '" + jarPath + "'");
                 }
                 final var jarDependency = project.files(jarPath);
-                configurations.forEach(config -> dependencies.add(config, jarDependency));
+                this.extension.getRemappedJarDependenciesConfigurations()
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .forEach(config -> dependencies.add(config, jarDependency));
             }
-            if (this.extension.isIncludeRawDependency()) {
+            if (this.extension.isIncludeRawJarDependency()) {
                 final Path rawJarPath = preparedData.versionJarPath();
                 if (Files.notExists(rawJarPath)) {
                     throw new IllegalStateException("The raw jar is not found at '" + rawJarPath + "'");
                 }
                 final var jarDependency = project.files(rawJarPath);
-                configurations.forEach(config -> dependencies.add(config, jarDependency));
+                this.extension.getRawJarDependenciesConfigurations()
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .forEach(config -> dependencies.add(config, jarDependency));
             }
         }
 
         if (this.extension.isIncludeLibrariesDependency()) {
             final var libraryDependency = project.files(this.dataManager.fetchLibraries());
-            configurations.forEach(config -> dependencies.add(config, libraryDependency));
+            this.extension.getLibrariesDependenciesConfigurations()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .forEach(config -> dependencies.add(config, libraryDependency));
         }
 
         if (this.extension.isRemapOnCompile()) {

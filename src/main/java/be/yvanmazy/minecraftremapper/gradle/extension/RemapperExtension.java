@@ -39,11 +39,13 @@ public class RemapperExtension {
 
     private boolean remapOnCompile = true;
     private boolean cancelCompileCache = true;
-    private boolean includeDependency = true;
-    private boolean includeRawDependency;
+    private boolean includeRemappedJarDependency = true;
+    private boolean includeRawJarDependency;
     private boolean includeLibrariesDependency;
 
-    private List<String> dependenciesConfigurations = List.of("compileOnly");
+    private List<String> remappedJarDependenciesConfigurations = List.of("compileOnly");
+    private List<String> rawJarDependenciesConfigurations = List.of("compileOnly");
+    private List<String> librariesDependenciesConfigurations = List.of("compileOnly");
 
     public void validate() {
         if (this.version == null) {
@@ -94,20 +96,20 @@ public class RemapperExtension {
         this.cancelCompileCache = cancelCompileCache;
     }
 
-    public boolean isIncludeDependency() {
-        return this.includeDependency;
+    public boolean isIncludeRemappedJarDependency() {
+        return this.includeRemappedJarDependency;
     }
 
-    public boolean isIncludeRawDependency() {
-        return this.includeRawDependency;
+    public void setIncludeRemappedJarDependency(final boolean includeRemappedJarDependency) {
+        this.includeRemappedJarDependency = includeRemappedJarDependency;
     }
 
-    public void setIncludeDependency(final boolean includeDependency) {
-        this.includeDependency = includeDependency;
+    public boolean isIncludeRawJarDependency() {
+        return this.includeRawJarDependency;
     }
 
-    public void setIncludeRawDependency(final boolean includeRawDependency) {
-        this.includeRawDependency = includeRawDependency;
+    public void setIncludeRawJarDependency(final boolean includeRawJarDependency) {
+        this.includeRawJarDependency = includeRawJarDependency;
     }
 
     public boolean isIncludeLibrariesDependency() {
@@ -118,12 +120,28 @@ public class RemapperExtension {
         this.includeLibrariesDependency = includeLibrariesDependency;
     }
 
-    public List<String> getDependenciesConfigurations() {
-        return this.dependenciesConfigurations;
+    public List<String> getRemappedJarDependenciesConfigurations() {
+        return this.remappedJarDependenciesConfigurations;
     }
 
-    public void setDependenciesConfigurations(final List<String> dependenciesConfigurations) {
-        this.dependenciesConfigurations = dependenciesConfigurations;
+    public void setRemappedJarDependenciesConfigurations(final List<String> remappedJarDependenciesConfigurations) {
+        this.remappedJarDependenciesConfigurations = remappedJarDependenciesConfigurations;
+    }
+
+    public List<String> getRawJarDependenciesConfigurations() {
+        return this.rawJarDependenciesConfigurations;
+    }
+
+    public void setRawJarDependenciesConfigurations(final List<String> rawJarDependenciesConfigurations) {
+        this.rawJarDependenciesConfigurations = rawJarDependenciesConfigurations;
+    }
+
+    public List<String> getLibrariesDependenciesConfigurations() {
+        return this.librariesDependenciesConfigurations;
+    }
+
+    public void setLibrariesDependenciesConfigurations(final List<String> librariesDependenciesConfigurations) {
+        this.librariesDependenciesConfigurations = librariesDependenciesConfigurations;
     }
 
 }
