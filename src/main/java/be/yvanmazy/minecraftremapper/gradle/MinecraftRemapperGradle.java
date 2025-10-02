@@ -26,10 +26,12 @@ package be.yvanmazy.minecraftremapper.gradle;
 
 import be.yvanmazy.minecraftremapper.gradle.action.RemapAction;
 import be.yvanmazy.minecraftremapper.gradle.data.DataManager;
+import be.yvanmazy.minecraftremapper.gradle.data.PreparedData;
 import be.yvanmazy.minecraftremapper.gradle.extension.RemapperExtension;
 import be.yvanmazy.minecraftremapper.gradle.remap.RemappingManager;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.dsl.DependencyHandler;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 public class MinecraftRemapperGradle implements Plugin<Project> {
@@ -58,23 +61,32 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
         this.extension.validate();
         this.homePath = this.prepareHomePath(project);
 
-        if (this.extension.isIncludeDependency()) {
-            final Path jarPath = this.dataManager.fetchData().remappedJarPath();
-            if (Files.notExists(jarPath)) {
-                throw new IllegalStateException("The remapped jar is not found at '" + jarPath + "'");
+        final DependencyHandler dependencies = project.getDependencies();
+        final List<String> configurations = this.extension.getDependenciesConfigurations().stream().filter(Objects::nonNull).toList();
+
+        if (this.extension.isIncludeDependency() || this.extension.isIncludeRawDependency()) {
+            final PreparedData preparedData = this.dataManager.fetchData();
+            if (this.extension.isIncludeDependency()) {
+                final Path jarPath = preparedData.remappedJarPath();
+                if (Files.notExists(jarPath)) {
+                    throw new IllegalStateException("The remapped jar is not found at '" + jarPath + "'");
+                }
+                final var jarDependency = project.files(jarPath);
+                configurations.forEach(config -> dependencies.add(config, jarDependency));
             }
-            final var jarDependency = project.files(jarPath);
-            this.extension.getDependenciesConfigurations()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .forEach(config -> project.getDependencies().add(config, jarDependency));
+            if (this.extension.isIncludeRawDependency()) {
+                final Path rawJarPath = preparedData.versionJarPath();
+                if (Files.notExists(rawJarPath)) {
+                    throw new IllegalStateException("The raw jar is not found at '" + rawJarPath + "'");
+                }
+                final var jarDependency = project.files(rawJarPath);
+                configurations.forEach(config -> dependencies.add(config, jarDependency));
+            }
         }
+
         if (this.extension.isIncludeLibrariesDependency()) {
             final var libraryDependency = project.files(this.dataManager.fetchLibraries());
-            this.extension.getDependenciesConfigurations()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .forEach(config -> project.getDependencies().add(config, libraryDependency));
+            configurations.forEach(config -> dependencies.add(config, libraryDependency));
         }
 
         if (this.extension.isRemapOnCompile()) {

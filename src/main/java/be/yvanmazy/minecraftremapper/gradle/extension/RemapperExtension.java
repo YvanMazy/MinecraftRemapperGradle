@@ -40,6 +40,7 @@ public class RemapperExtension {
     private boolean remapOnCompile = true;
     private boolean cancelCompileCache = true;
     private boolean includeDependency = true;
+    private boolean includeRawDependency;
     private boolean includeLibrariesDependency;
 
     private List<String> dependenciesConfigurations = List.of("compileOnly");
@@ -97,8 +98,16 @@ public class RemapperExtension {
         return this.includeDependency;
     }
 
+    public boolean isIncludeRawDependency() {
+        return this.includeRawDependency;
+    }
+
     public void setIncludeDependency(final boolean includeDependency) {
         this.includeDependency = includeDependency;
+    }
+
+    public void setIncludeRawDependency(final boolean includeRawDependency) {
+        this.includeRawDependency = includeRawDependency;
     }
 
     public boolean isIncludeLibrariesDependency() {
