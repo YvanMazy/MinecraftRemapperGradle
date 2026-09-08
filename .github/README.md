@@ -48,22 +48,45 @@ minecraftRemapper {
     // Default value: Gradle user home directory
     homePath = file('myHomeDirectory')
     // Set to false if you don't want to remap classes at compile time
+    // Has no effect on versions that are not obfuscated, see the note above.
     // Default value: true
     remapOnCompile = true
     // Set to false if you don't want to cancel compile cache
     // This avoids the compilation UP-TO-DATE that prevents remapping.
     // Default value: true
     cancelCompileCache = true
-    // Set to true if you want the sources to be added to the module's dependencies.
+    // Set to true if you want the remapped jar to be added to the module's dependencies.
     // Default value: true
-    includeDependency = true
+    includeRemappedJarDependency = true
+    // Set to true if you want the original version jar to be added to the module's dependencies.
+    // Default value: false
+    includeRawJarDependency = false
     // Set to true if you want the libraries used in the game to be added to the module's dependencies.
     // Default value: false
     includeLibrariesDependency = false
-    // List of configurations to add the sources and libraries to.
+    // List of configurations to add the remapped jar to.
     // Important to modify if you only want to use the plugin for testing.
     // Default value: ['compileOnly']
-    dependenciesConfigurations = ['compileOnly']
+    remappedJarDependenciesConfigurations = ['compileOnly']
+    // List of configurations to add the original version jar to.
+    // Default value: ['compileOnly']
+    rawJarDependenciesConfigurations = ['compileOnly']
+    // List of configurations to add the game libraries to.
+    // Default value: ['compileOnly']
+    librariesDependenciesConfigurations = ['compileOnly']
+}
+```
+
+Each kind of dependency has its own list of configurations, so they can be wired independently. For example, to
+compile against the remapped jar but run against the original one:
+
+```groovy
+minecraftRemapper {
+    includeRawJarDependency = true
+    includeLibrariesDependency = true
+    remappedJarDependenciesConfigurations = ['integrationTestCompileOnly']
+    librariesDependenciesConfigurations = ['integrationTestCompileOnly']
+    rawJarDependenciesConfigurations = ['integrationTestRuntimeOnly']
 }
 ```
 
