@@ -48,7 +48,7 @@ minecraftRemapper {
     // Default value: Gradle user home directory
     homePath = file('myHomeDirectory')
     // Set to false if you don't want to remap classes at compile time
-    // Has no effect on versions that are not obfuscated, see the note above.
+    // Has no effect on versions that are not obfuscated, see the note below.
     // Default value: true
     remapOnCompile = true
     // Set to false if you don't want to cancel compile cache
@@ -76,6 +76,10 @@ minecraftRemapper {
     librariesDependenciesConfigurations = ['compileOnly']
 }
 ```
+
+> [!NOTE]
+> Minecraft 26.1 and later are shipped unobfuscated, so remapping is skipped and the version jar is used as-is.
+> The `remapOnCompile` and `cancelCompileCache` options have no effect on these versions.
 
 Each kind of dependency has its own list of configurations, so they can be wired independently. For example, to
 compile against the remapped jar but run against the original one:
