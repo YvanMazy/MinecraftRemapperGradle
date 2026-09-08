@@ -6,15 +6,21 @@ plugins {
 group = 'be.yvanmazy'
 version = '1.0'
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'org.ow2.asm:asm:9.7.1'
-    implementation 'org.ow2.asm:asm-util:9.7.1'
-    implementation 'com.github.YvanMazy:MinecraftRemapper:dc0de8165a'
+    implementation 'org.ow2.asm:asm:9.10.1'
+    implementation 'org.ow2.asm:asm-util:9.10.1'
+    implementation 'com.github.YvanMazy:MinecraftRemapper:1.2'
 }
 
 gradlePlugin {
