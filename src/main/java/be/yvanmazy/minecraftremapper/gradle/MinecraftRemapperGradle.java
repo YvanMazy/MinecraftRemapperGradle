@@ -65,11 +65,11 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
         if (this.extension.isIncludeRemappedJarDependency() || this.extension.isIncludeRawJarDependency()) {
             final PreparedData preparedData = this.dataManager.fetchData();
             if (this.extension.isIncludeRemappedJarDependency()) {
-                final Path jarPath = preparedData.remappedJarPath();
-                if (Files.notExists(jarPath)) {
-                    throw new IllegalStateException("The remapped jar is not found at '" + jarPath + "'");
+                final Path remappedJarPath = preparedData.remappedJarPath();
+                if (Files.notExists(remappedJarPath)) {
+                    throw new IllegalStateException("The remapped jar is not found at '" + remappedJarPath + "'");
                 }
-                final var jarDependency = project.files(jarPath);
+                final var jarDependency = project.files(remappedJarPath);
                 this.extension.getRemappedJarDependenciesConfigurations()
                         .stream()
                         .filter(Objects::nonNull)
@@ -96,7 +96,8 @@ public class MinecraftRemapperGradle implements Plugin<Project> {
                     .forEach(config -> dependencies.add(config, libraryDependency));
         }
 
-        if (this.extension.isRemapOnCompile()) {
+        // Versions since Minecraft 26.1 are shipped unobfuscated, so there is nothing to remap
+        if (this.extension.isRemapOnCompile() && this.dataManager.fetchData().obfuscated()) {
             project.getTasks().withType(JavaCompile.class, task -> {
                 task.doLast(new RemapAction(task.getDestinationDirectory(), this.remappingManager::remap));
                 if (this.extension.isCancelCompileCache()) {

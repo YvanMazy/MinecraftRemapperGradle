@@ -110,7 +110,10 @@ public class DataManager {
         if (this.processor == null) {
             this.processor = this.process();
         }
-        return new PreparedData(this.processor.getVersionJarPath(), this.processor.getMappingPath(), this.processor.getRemappedJarPath());
+        return new PreparedData(this.processor.getVersionJarPath(),
+                this.processor.getMappingPath(),
+                this.processor.getRemappedJarPath(),
+                this.processor.isObfuscated());
     }
 
     private Path download(final Library library) {

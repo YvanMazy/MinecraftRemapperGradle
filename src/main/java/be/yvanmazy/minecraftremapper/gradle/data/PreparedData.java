@@ -28,6 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
-public record PreparedData(@NotNull Path versionJarPath, @NotNull Path mappingPath, @NotNull Path remappedJarPath) {
+public record PreparedData(@NotNull Path versionJarPath, @NotNull Path mappingPath, @NotNull Path remappedJarPath, boolean obfuscated) {
 
 }
