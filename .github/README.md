@@ -41,7 +41,7 @@ apply plugin: 'be.yvanmazy.minecraftremapper.gradle'
 
 minecraftRemapper {
     // Minecraft version (MANDATORY)
-    version = "1.21.3"
+    version = "26.2"
     // CLIENT or SERVER (MANDATORY)
     directionType = 'CLIENT'
     // Path to your Minecraft installation (OPTIONAL)
